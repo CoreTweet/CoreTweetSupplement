@@ -76,7 +76,7 @@ namespace CoreTweet
             return ParseSource(status.Source);
         }
 
-        private static IEnumerable<string> EnumerateChar(string str)
+        private static IEnumerable<string> EnumerateChars(string str)
         {
             for (var i = 0; i < str.Length; i++)
             {
@@ -180,9 +180,9 @@ namespace CoreTweet
             }
 
             var current = list.First;
-            var chars = EnumerateChar(text).ToArray();
+            var chars = EnumerateChars(text).ToArray();
 
-            while (current != null)
+            while (true)
             {
                 var start = current.Previous != null ? current.Previous.Value.End : 0;
                 var count = current.Value.Start - start;

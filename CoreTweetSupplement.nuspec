@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>CoreTweetSupplement</id>
+        <version>1.0.0</version>
+        <title>CoreTweetSupplement</title>
+        <authors>azyobuzin</authors>
+        <licenseUrl>https://github.com/azyobuzin/CoreTweetSupplement/blob/master/LICENSE.txt</licenseUrl>
+        <projectUrl>https://github.com/azyobuzin/CoreTweetSupplement</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>An utility for client developers with CoreTweet</description>
+        <copyright>(c) 2014 azyobuzin</copyright>
+        <tags>Twitter</tags>
+        <dependencies>
+            <dependency id="CoreTweet" version="(, 0.3.2]" />
+            <dependency id="Newtonsoft.Json" version="4.5.11" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin\Release\CoreTweetSupplement.dll" target="lib\portable-net4+sl5+wp8+win8+wpa81+MonoAndroid+MonoTouch\CoreTweetSupplement.dll" />
+        <file src="bin\Release\CoreTweetSupplement.XML" target="lib\portable-net4+sl5+wp8+win8+wpa81+MonoAndroid+MonoTouch\CoreTweetSupplement.XML" />
+    </files>
+</package>

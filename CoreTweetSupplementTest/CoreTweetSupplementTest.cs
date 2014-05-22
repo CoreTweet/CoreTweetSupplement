@@ -44,9 +44,9 @@ namespace CoreTweetSupplementTest
         }
 
         [TestMethod]
-        public void TestEnumerateChar()
+        public void TestEnumerateChars()
         {
-            ((IEnumerable<string>)TestTarget.InvokeStatic("EnumerateChar", "𠮷野家こそ至高!"))
+            ((IEnumerable<string>)TestTarget.InvokeStatic("EnumerateChars", "𠮷野家こそ至高!"))
                 .Is("𠮷", "野", "家", "こ", "そ", "至", "高", "!");
         }
 

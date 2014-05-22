@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{67A9B0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplementTest", "CoreTweetSupplementTest\CoreTweetSupplementTest.csproj", "{FDC352B1-A93E-4DDB-895B-342DB718B869}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplement.net35", "CoreTweetSupplement.net35\CoreTweetSupplement.net35.csproj", "{43C302E4-3ACE-4FB1-A5F2-20952B0EA17C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,10 +28,6 @@ Global
 		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43C302E4-3ACE-4FB1-A5F2-20952B0EA17C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43C302E4-3ACE-4FB1-A5F2-20952B0EA17C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43C302E4-3ACE-4FB1-A5F2-20952B0EA17C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43C302E4-3ACE-4FB1-A5F2-20952B0EA17C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
