@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using CoreTweet.Core;
 
 namespace CoreTweet
 {
@@ -98,16 +97,16 @@ namespace CoreTweet
             internal int End { get; set; }
             public string RawText { get; set; }
             public string Text { get; set; }
-            public CoreBase Entity { get; set; }
+            public Entity Entity { get; set; }
         }
 
         /// <summary>
         /// Enumerates parts split into Tweet Entities.
         /// </summary>
         /// <param name="text">The text such as <see cref="CoreTweet.Status.Text"/>, <see cref="CoreTweet.DirectMessage.Text"/> and <see cref="CoreTweet.User.Description"/>.</param>
-        /// <param name="entities">The <see cref="CoreTweet.Entity"/> instance.</param>
+        /// <param name="entities">The <see cref="CoreTweet.Entities"/> instance.</param>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable{CoreTweet.ITextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
-        public static IEnumerable<ITextPart> EnumerateTextParts(string text, Entity entities)
+        public static IEnumerable<ITextPart> EnumerateTextParts(string text, Entities entities)
         {
             if (entities == null)
             {
@@ -120,7 +119,7 @@ namespace CoreTweet
             }
 
             var list = new LinkedList<TextPart>(
-                (entities.HashTags ?? Enumerable.Empty<HashTag>())
+                (entities.HashTags ?? Enumerable.Empty<SymbolEntity>())
                     .Select(e => new TextPart()
                     {
                         Type = TextPartType.Hashtag,
@@ -131,7 +130,20 @@ namespace CoreTweet
                         Entity = e
                     })
                     .Concat(
-                        (entities.Media ?? Enumerable.Empty<Media>())
+                        (entities.Symbols ?? Enumerable.Empty<SymbolEntity>())
+                            .Select(e => new TextPart()
+                            {
+                                Type = TextPartType.Cashtag,
+                                Start = e.Indices[0],
+                                End = e.Indices[1],
+                                RawText = "$" + e.Text,
+                                Text = "$" + e.Text,
+                                Entity = e
+                            })
+                    )
+                    .Concat(
+                        (entities.Urls ?? Enumerable.Empty<UrlEntity>())
+                            .Concat(entities.Media ?? Enumerable.Empty<UrlEntity>())
                             .Select(e => new TextPart()
                             {
                                 Type = TextPartType.Url,
@@ -143,19 +155,7 @@ namespace CoreTweet
                             })
                     )
                     .Concat(
-                        (entities.Urls ?? Enumerable.Empty<Url>())
-                            .Select(e => new TextPart()
-                            {
-                                Type = TextPartType.Url,
-                                Start = e.Indices[0],
-                                End = e.Indices[1],
-                                RawText = e.Uri.ToString(),
-                                Text = e.DisplayUrl,
-                                Entity = e
-                            })
-                    )
-                    .Concat(
-                        (entities.UserMentions ?? Enumerable.Empty<UserMention>())
+                        (entities.UserMentions ?? Enumerable.Empty<UserMentionEntity>())
                             .Select(e => new TextPart()
                             {
                                 Type = TextPartType.UserMention,
@@ -264,19 +264,25 @@ namespace CoreTweet
 
         /// <summary>
         /// Hashtag.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.HashTag" /> instance.
+        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.SymbolEntity" /> instance.
         /// </summary>
         Hashtag,
 
         /// <summary>
+        /// Cashtag.
+        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.SymbolEntity" /> instance.
+        /// </summary>
+        Cashtag,
+
+        /// <summary>
         /// URL.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.Url" /> instance.
+        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.UrlEntity" /> instance.
         /// </summary>
         Url,
 
         /// <summary>
         /// User mention.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.UserMention" /> instance.
+        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.UserMentionEntity" /> instance.
         /// </summary>
         UserMention
     }
@@ -304,6 +310,6 @@ namespace CoreTweet
         /// <summary>
         /// The base entity information.
         /// </summary>
-        CoreBase Entity { get; }
+        Entity Entity { get; }
     }
 }

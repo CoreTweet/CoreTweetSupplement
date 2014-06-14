@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CoreTweet">
-      <HintPath>..\packages\CoreTweet.0.3.2\lib\portable-net4+sl5+wp8+win8+MonoAndroid+MonoTouch\CoreTweet.dll</HintPath>
+      <HintPath>..\packages\CoreTweet.0.3.3\lib\portable-net4+sl5+wp8+win8+wpa81+MonoAndroid+MonoTouch\CoreTweet.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net40+sl4+wp7+win8\Newtonsoft.Json.dll</HintPath>
