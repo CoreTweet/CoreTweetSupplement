@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CoreTweet
@@ -232,6 +233,64 @@ namespace CoreTweet
         public static IEnumerable<ITextPart> EnumerateTextParts(this DirectMessage dm)
         {
             return EnumerateTextParts(dm.Text, dm.Entities);
+        }
+
+        /// <summary>
+        /// Returns the URI suffix for given profile size image variant. See User Profile Images and Banners.
+        /// </summary>
+        /// <returns>The alternative URI suffix in profile image.</returns>
+        /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
+        private static string GetAlternativeProfileImageUriSuffix(string size)
+        {
+            if (string.IsNullOrEmpty(size))
+                return "";
+            else if (string.Equals(size, "orig"))
+                return "";
+            else
+                return "_" + size;
+        }
+
+        /// <summary>
+        /// Returns the URI for given profile image URI and alternative size. See User Profile Images and Banners.
+        /// </summary>
+        /// <returns>The alternative profile image URI.</returns>
+        /// <param name="uri">The original URI of <see cref="CoreTweet.User.ProfileImageUrl" /> or <see cref="CoreTweet.User.ProfileImageUrlHttps" />.</param>
+        /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
+        private static Uri GetAlternativeProfileImageUri(Uri uri, string size)
+        {
+            var uriBuilder = new UriBuilder(uri);
+            var path = uriBuilder.Path;
+            int index = path.LastIndexOf("_normal", StringComparison.Ordinal);
+            if (index < 0)
+                return uri;
+            var pathBuilder = new StringBuilder(path.Length);
+            pathBuilder.Append(path, 0, index);
+            pathBuilder.Append(GetAlternativeProfileImageUriSuffix(size));
+            pathBuilder.Append(path, index + 7, path.Length - (index + 7));
+            uriBuilder.Path = pathBuilder.ToString();
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Gets a HTTP-based URL pointing to the user's avatar image with given size. See User Profile Images and Banners.
+        /// </summary>
+        /// <returns>The profile image URL.</returns>
+        /// <param name="user">A <see cref="CoreTweet.User"/> instance.</param>
+        /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
+        public static Uri GetProfileImageUrl(this User user, string size = "normal")
+        {
+            return GetAlternativeProfileImageUri(user.ProfileImageUrl, size);
+        }
+
+        /// <summary>
+        /// Gets a HTTPS-based URL pointing to the user's avatar image with given size. See User Profile Images and Banners.
+        /// </summary>
+        /// <returns>The profile image URL.</returns>
+        /// <param name="user">A <see cref="CoreTweet.User"/> instance.</param>
+        /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
+        public static Uri GetProfileImageUrlHttps(this User user, string size = "normal")
+        {
+            return GetAlternativeProfileImageUri(user.ProfileImageUrlHttps, size);
         }
     }
 
