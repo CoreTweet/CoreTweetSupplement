@@ -90,7 +90,7 @@ namespace CoreTweet
                 }
             }
         }
-        
+
         private class TextPart : ITextPart
         {
             public TextPartType Type { get; set; }
@@ -196,7 +196,7 @@ namespace CoreTweet
                         Text = HtmlDecode(output)
                     };
                 }
-                
+
                 yield return current.Value;
 
                 if (current.Next == null) break;

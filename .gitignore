@@ -157,3 +157,9 @@ $RECYCLE.BIN/
 
 packages
 *.nupkg
+
+# =========================
+# MonoDevelop
+# =========================
+
+*.userprefs

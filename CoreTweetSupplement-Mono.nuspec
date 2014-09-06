@@ -18,7 +18,5 @@
     <files>
         <file src="CoreTweetSupplement\bin\Release\CoreTweetSupplement.dll" target="lib\net40\CoreTweetSupplement.dll" />
         <file src="CoreTweetSupplement\bin\Release\CoreTweetSupplement.xml" target="lib\net40\CoreTweetSupplement.xml" />
-        <file src="CoreTweetSupplement.Pcl\bin\Release\CoreTweetSupplement.dll" target="lib\portable-net4+sl5+wp8+win8+wpa81+MonoAndroid+MonoTouch\CoreTweetSupplement.dll" />
-        <file src="CoreTweetSupplement.Pcl\bin\Release\CoreTweetSupplement.xml" target="lib\portable-net4+sl5+wp8+win8+wpa81+MonoAndroid+MonoTouch\CoreTweetSupplement.xml" />
     </files>
 </package>
