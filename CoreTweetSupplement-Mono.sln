@@ -5,10 +5,6 @@ VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplement", "CoreTweetSupplement\CoreTweetSupplement.csproj", "{E16A132A-343B-4349-B925-EB84EA6B4109}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplement.Pcl", "CoreTweetSupplement.Pcl\CoreTweetSupplement.Pcl.csproj", "{8DECAE07-93E7-411C-BC78-567547FCB8BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplementTest", "CoreTweetSupplementTest\CoreTweetSupplementTest.csproj", "{FDC352B1-A93E-4DDB-895B-342DB718B869}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{67A9B024-FBDD-4A42-B32D-6F0D39F262F0}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -26,14 +22,6 @@ Global
 		{E16A132A-343B-4349-B925-EB84EA6B4109}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E16A132A-343B-4349-B925-EB84EA6B4109}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E16A132A-343B-4349-B925-EB84EA6B4109}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -70,13 +70,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoreTweetSupplement\CoreTweetSupplement.csproj">
+    <ProjectReference Include="..\CoreTweetSupplement.Pcl\CoreTweetSupplement.Pcl.csproj">
       <Project>{8decae07-93e7-411c-bc78-567547fcb8bc}</Project>
-      <Name>CoreTweetSupplement</Name>
+      <Name>CoreTweetSupplement.Pcl</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
@@ -106,7 +105,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
