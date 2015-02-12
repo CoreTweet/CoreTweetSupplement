@@ -41,10 +41,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="CoreTweet">
-      <HintPath>..\packages\CoreTweet.0.3.4\lib\net40\CoreTweet.dll</HintPath>
+      <HintPath>..\packages\CoreTweet.0.4.1\lib\net40\CoreTweet.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\portable-net40+sl4+wp7+win8\Newtonsoft.Json.dll</HintPath>
     </Reference>
