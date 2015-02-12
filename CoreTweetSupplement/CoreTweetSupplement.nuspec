@@ -5,8 +5,8 @@
         <version>$version$</version>
         <title>CoreTweetSupplement</title>
         <authors>azyobuzin</authors>
-        <licenseUrl>https://github.com/azyobuzin/CoreTweetSupplement/blob/master/LICENSE.txt</licenseUrl>
-        <projectUrl>https://github.com/azyobuzin/CoreTweetSupplement</projectUrl>
+        <licenseUrl>https://github.com/CoreTweet/CoreTweetSupplement/blob/master/LICENSE.txt</licenseUrl>
+        <projectUrl>https://github.com/CoreTweet/CoreTweetSupplement</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>An utility for client developers with CoreTweet</description>
         <copyright>(c) 2014 azyobuzin</copyright>
