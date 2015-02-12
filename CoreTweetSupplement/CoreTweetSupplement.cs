@@ -91,6 +91,20 @@ namespace CoreTweet
             }
         }
 
+        private static IEnumerable<T> Slice<T>(this T[] source, int start)
+        {
+            var len = source.Length;
+            for (var i = start; i < len; i++)
+                yield return source[i];
+        }
+
+        private static IEnumerable<T> Slice<T>(this T[] source, int start, int count)
+        {
+            var end = start + count;
+            for (var i = start; i < end; i++)
+                yield return source[i];
+        }
+
         private class TextPart : ITextPart
         {
             public TextPartType Type { get; set; }
@@ -119,6 +133,13 @@ namespace CoreTweet
                 yield break;
             }
 
+            var media = entities.Media ?? Enumerable.Empty<UrlEntity>();
+            if (entities.Urls != null)
+            {
+                // Remove duplicate entities in DM
+                media = media.Where(e => !entities.Urls.Any(x => x.Indices[0] == e.Indices[0]));
+            }
+
             var list = new LinkedList<TextPart>(
                 (entities.HashTags ?? Enumerable.Empty<SymbolEntity>())
                     .Select(e => new TextPart()
@@ -144,7 +165,7 @@ namespace CoreTweet
                     )
                     .Concat(
                         (entities.Urls ?? Enumerable.Empty<UrlEntity>())
-                            .Concat(entities.Media ?? Enumerable.Empty<UrlEntity>())
+                            .Concat(media)
                             .Select(e => new TextPart()
                             {
                                 Type = TextPartType.Url,
@@ -189,7 +210,7 @@ namespace CoreTweet
                 var count = current.Value.Start - start;
                 if (count > 0)
                 {
-                    var output = string.Concat(chars.Skip(start).Take(count));
+                    var output = string.Concat(chars.Slice(start, count));
                     yield return new TextPart()
                     {
                         RawText = output,
@@ -206,7 +227,7 @@ namespace CoreTweet
             var lastStart = current.Value.End;
             if (lastStart < chars.Length)
             {
-                var lastOutput = string.Concat(chars.Skip(lastStart));
+                var lastOutput = string.Concat(chars.Slice(lastStart));
                 yield return new TextPart()
                 {
                     RawText = lastOutput,
