@@ -41,9 +41,9 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreTweet, Version=0.4.1.21404, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="CoreTweet, Version=0.4.3.110, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CoreTweet.0.4.1\lib\net45\CoreTweet.dll</HintPath>
+      <HintPath>..\packages\CoreTweet.0.4.3.110\lib\net45\CoreTweet.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
