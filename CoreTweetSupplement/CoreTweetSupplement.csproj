@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CoreTweet">
-      <HintPath>..\packages\CoreTweet.0.4.1\lib\net40\CoreTweet.dll</HintPath>
+      <HintPath>..\packages\CoreTweet.0.4.3.110\lib\net40\CoreTweet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Newtonsoft.Json">
