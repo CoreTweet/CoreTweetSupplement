@@ -277,13 +277,13 @@ namespace CoreTweet
         /// <returns>The alternative profile image URI.</returns>
         /// <param name="uri">The original URI of <see cref="CoreTweet.User.ProfileImageUrl" /> or <see cref="CoreTweet.User.ProfileImageUrlHttps" />.</param>
         /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
-        private static Uri GetAlternativeProfileImageUri(Uri uri, string size)
+        private static Uri GetAlternativeProfileImageUri(string uri, string size)
         {
             var uriBuilder = new UriBuilder(uri);
             var path = uriBuilder.Path;
             int index = path.LastIndexOf("_normal", StringComparison.Ordinal);
             if (index < 0)
-                return uri;
+                return uriBuilder.Uri;
             var pathBuilder = new StringBuilder(path.Length);
             pathBuilder.Append(path, 0, index);
             pathBuilder.Append(GetAlternativeProfileImageUriSuffix(size));
