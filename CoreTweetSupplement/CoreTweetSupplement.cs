@@ -44,7 +44,7 @@ namespace CoreTweet
         /// Parse source field.
         /// </summary>
         /// <param name="html">The content of source field.</param>
-        /// <returns>A <see cref="CoreTweet.Source"/> instance.</returns>
+        /// <returns>A <see cref="Source"/> instance.</returns>
         public static Source ParseSource(string html)
         {
             if (!html.StartsWith("<"))
@@ -58,7 +58,7 @@ namespace CoreTweet
                 ? new Source()
                 {
                     Name = HtmlDecode(match.Groups[2].Value),
-                    Href = new Uri(HtmlDecode(match.Groups[1].Value))
+                    Href = HtmlDecode(match.Groups[1].Value)
                 }
                 : new Source()
                 {
@@ -67,10 +67,10 @@ namespace CoreTweet
         }
 
         /// <summary>
-        /// Parse the html of <see cref="CoreTweet.Status.Source"/>.
+        /// Parse the html of <see cref="Status.Source"/>.
         /// </summary>
-        /// <param name="status">The <see cref="CoreTweet.Status"/> instance.</param>
-        /// <returns>A <see cref="CoreTweet.Source"/> instance.</returns>
+        /// <param name="status">The <see cref="Status"/> instance.</param>
+        /// <returns>A <see cref="Source"/> instance.</returns>
         public static Source ParseSource(this Status status)
         {
             return ParseSource(status.Source);
@@ -118,9 +118,9 @@ namespace CoreTweet
         /// <summary>
         /// Enumerates parts split into Tweet Entities.
         /// </summary>
-        /// <param name="text">The text such as <see cref="CoreTweet.Status.Text"/>, <see cref="CoreTweet.DirectMessage.Text"/> and <see cref="CoreTweet.User.Description"/>.</param>
-        /// <param name="entities">The <see cref="CoreTweet.Entities"/> instance.</param>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable{CoreTweet.ITextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
+        /// <param name="text">The text such as <see cref="Status.Text"/>, <see cref="DirectMessage.Text"/> and <see cref="User.Description"/>.</param>
+        /// <param name="entities">The <see cref="Entities"/> instance.</param>
+        /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
         public static IEnumerable<ITextPart> EnumerateTextParts(string text, Entities entities)
         {
             if (entities == null)
@@ -206,7 +206,7 @@ namespace CoreTweet
 
             while (true)
             {
-                var start = current.Previous != null ? current.Previous.Value.End : 0;
+                var start = current.Previous?.Value.End ?? 0;
                 var count = current.Value.Start - start;
                 if (count > 0)
                 {
@@ -239,8 +239,8 @@ namespace CoreTweet
         /// <summary>
         /// Enumerates parts split into Tweet Entities.
         /// </summary>
-        /// <param name="status">The <see cref="CoreTweet.Status"/> instance.</param>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable{CoreTweet.ITextPart}"/> whose elements are parts of <paramref name="status"/>'s text.</returns>
+        /// <param name="status">The <see cref="Status"/> instance.</param>
+        /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="status"/>'s text.</returns>
         public static IEnumerable<ITextPart> EnumerateTextParts(this Status status)
         {
             return EnumerateTextParts(status.Text, status.Entities);
@@ -249,8 +249,8 @@ namespace CoreTweet
         /// <summary>
         /// Enumerates parts split into Tweet Entities.
         /// </summary>
-        /// <param name="dm">The <see cref="CoreTweet.DirectMessage"/> instance.</param>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable{CoreTweet.ITextPart}"/> whose elements are parts of <paramref name="dm"/>'s text.</returns>
+        /// <param name="dm">The <see cref="DirectMessage"/> instance.</param>
+        /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="dm"/>'s text.</returns>
         public static IEnumerable<ITextPart> EnumerateTextParts(this DirectMessage dm)
         {
             return EnumerateTextParts(dm.Text, dm.Entities);
@@ -265,25 +265,24 @@ namespace CoreTweet
         {
             if (string.IsNullOrEmpty(size))
                 return "";
-            else if (string.Equals(size, "orig"))
+            if (string.Equals(size, "orig"))
                 return "";
-            else
-                return "_" + size;
+            return "_" + size;
         }
 
         /// <summary>
         /// Returns the URI for given profile image URI and alternative size. See User Profile Images and Banners.
         /// </summary>
         /// <returns>The alternative profile image URI.</returns>
-        /// <param name="uri">The original URI of <see cref="CoreTweet.User.ProfileImageUrl" /> or <see cref="CoreTweet.User.ProfileImageUrlHttps" />.</param>
+        /// <param name="uri">The original URI of <see cref="User.ProfileImageUrl" /> or <see cref="User.ProfileImageUrlHttps" />.</param>
         /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
-        private static Uri GetAlternativeProfileImageUri(Uri uri, string size)
+        private static Uri GetAlternativeProfileImageUri(string uri, string size)
         {
             var uriBuilder = new UriBuilder(uri);
             var path = uriBuilder.Path;
             int index = path.LastIndexOf("_normal", StringComparison.Ordinal);
             if (index < 0)
-                return uri;
+                return uriBuilder.Uri;
             var pathBuilder = new StringBuilder(path.Length);
             pathBuilder.Append(path, 0, index);
             pathBuilder.Append(GetAlternativeProfileImageUriSuffix(size));
@@ -296,7 +295,7 @@ namespace CoreTweet
         /// Gets a HTTP-based URL pointing to the user's avatar image with given size. See User Profile Images and Banners.
         /// </summary>
         /// <returns>The profile image URL.</returns>
-        /// <param name="user">A <see cref="CoreTweet.User"/> instance.</param>
+        /// <param name="user">A <see cref="User"/> instance.</param>
         /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
         public static Uri GetProfileImageUrl(this User user, string size = "normal")
         {
@@ -307,7 +306,7 @@ namespace CoreTweet
         /// Gets a HTTPS-based URL pointing to the user's avatar image with given size. See User Profile Images and Banners.
         /// </summary>
         /// <returns>The profile image URL.</returns>
-        /// <param name="user">A <see cref="CoreTweet.User"/> instance.</param>
+        /// <param name="user">A <see cref="User"/> instance.</param>
         /// <param name="size">Size of the image to obtain ("orig" to obtain the original size).</param>
         public static Uri GetProfileImageUrlHttps(this User user, string size = "normal")
         {
@@ -328,41 +327,41 @@ namespace CoreTweet
         /// <summary>
         /// The URL of the client witch the user tweeted with.
         /// </summary>
-        public Uri Href { get; set; }
+        public string Href { get; set; }
     }
 
     /// <summary>
-    /// Types of <see cref="CoreTweet.ITextPart"/>.
+    /// Types of <see cref="ITextPart"/>.
     /// </summary>
     public enum TextPartType
     {
         /// <summary>
         /// Plain text, which is related to no entity.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be <c>null</c>.
+        /// <see cref="ITextPart.Entity"/> will be <c>null</c>.
         /// </summary>
         Plain,
 
         /// <summary>
         /// Hashtag.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.SymbolEntity" /> instance.
+        /// <see cref="ITextPart.Entity"/> will be a <see cref="HashtagEntity" /> instance.
         /// </summary>
         Hashtag,
 
         /// <summary>
         /// Cashtag.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.SymbolEntity" /> instance.
+        /// <see cref="ITextPart.Entity"/> will be a <see cref="CashtagEntity" /> instance.
         /// </summary>
         Cashtag,
 
         /// <summary>
         /// URL.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.UrlEntity" /> instance.
+        /// <see cref="ITextPart.Entity"/> will be a <see cref="UrlEntity" /> instance.
         /// </summary>
         Url,
 
         /// <summary>
         /// User mention.
-        /// <see cref="CoreTweet.ITextPart.Entity"/> will be a <see cref="CoreTweet.UserMentionEntity" /> instance.
+        /// <see cref="ITextPart.Entity"/> will be a <see cref="UserMentionEntity" /> instance.
         /// </summary>
         UserMention
     }

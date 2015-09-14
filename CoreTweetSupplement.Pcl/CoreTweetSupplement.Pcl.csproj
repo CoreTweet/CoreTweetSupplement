@@ -50,8 +50,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CoreTweet">
-      <HintPath>..\packages\CoreTweet.0.4.3.110\lib\portable-net4+sl5+wp8+win8+wpa81+MonoAndroid+MonoTouch+Xamarin.iOS\CoreTweet.dll</HintPath>
+    <Reference Include="CoreTweet, Version=0.5.3.40350, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoreTweet.0.5.3\lib\portable-net4+sl5+wp8+win8+wpa81+MonoAndroid+MonoTouch+Xamarin.iOS\CoreTweet.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>

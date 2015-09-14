@@ -33,7 +33,7 @@ namespace CoreTweetSupplementTest
                 .IsStructuralEqual(new Source()
                 {
                     Name = "Twitter for iPhone",
-                    Href = new Uri("http://twitter.com/download/iphone")
+                    Href = "http://twitter.com/download/iphone"
                 });
             CoreTweetSupplement.ParseSource("web")
                 .IsStructuralEqual(new Source()
@@ -334,7 +334,7 @@ namespace CoreTweetSupplementTest
         [TestMethod]
         public void TestAlternativeProfileImageUriSuffix()
         {
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", new Type[] { typeof(string) }, new object[] { null }).Is("");
+            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", new[] { typeof(string) }, new object[] { null }).Is("");
             TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "").Is("");
             TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "orig").Is("");
             TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "mini").Is("_mini");
@@ -347,27 +347,27 @@ namespace CoreTweetSupplementTest
         {
             // Basic tests
             TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                new Uri("http://example.com/path1/path2/test_normal.png"), "orig")
+                "http://example.com/path1/path2/test_normal.png", "orig")
                 .Is(new Uri("http://example.com/path1/path2/test.png"));
             TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                new Uri("http://example.com/path1/path2/test_normal.gif"), "normal")
+                "http://example.com/path1/path2/test_normal.gif", "normal")
                 .Is(new Uri("http://example.com/path1/path2/test_normal.gif"));
             TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                new Uri("http://example.com/path1/path2/test_normal.jpg"), "mini")
+                "http://example.com/path1/path2/test_normal.jpg", "mini")
                 .Is(new Uri("http://example.com/path1/path2/test_mini.jpg"));
             TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                new Uri("http://example.com/path1/path2/test_normal"), "bigger")
+                "http://example.com/path1/path2/test_normal", "bigger")
                 .Is(new Uri("http://example.com/path1/path2/test_bigger"));
             // URL escape tests
             TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                new Uri("http://example.com/%E3%83%86%E3%82%B9%E3%83%88_normal.png"), "orig")
+                "http://example.com/%E3%83%86%E3%82%B9%E3%83%88_normal.png", "orig")
                 .Is(new Uri("http://example.com/%E3%83%86%E3%82%B9%E3%83%88.png"));
             TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                new Uri("http://example.com/%83%65%83%58%83%67_normal.jpeg"), "mini")
+                "http://example.com/%83%65%83%58%83%67_normal.jpeg", "mini")
                 .Is(new Uri("http://example.com/%83%65%83%58%83%67_mini.jpeg"));
             // Complex paths
             TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                new Uri("http://example.com//path1//path2/test_normal.gif?test1=test2&test3=%83%65%83%58%83%674&test5=%E3%83%86%E3%82%B9%E3%83%886#example-section"), "bigger")
+                "http://example.com//path1//path2/test_normal.gif?test1=test2&test3=%83%65%83%58%83%674&test5=%E3%83%86%E3%82%B9%E3%83%886#example-section", "bigger")
                 .Is(new Uri("http://example.com//path1//path2/test_bigger.gif?test1=test2&test3=%83%65%83%58%83%674&test5=%E3%83%86%E3%82%B9%E3%83%886#example-section"));
         }
     }

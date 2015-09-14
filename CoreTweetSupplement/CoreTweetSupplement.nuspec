@@ -4,15 +4,16 @@
         <id>CoreTweetSupplement</id>
         <version>$version$</version>
         <title>CoreTweetSupplement</title>
-        <authors>azyobuzin</authors>
+        <authors>CoreTweet Development Team</authors>
+        <owners>azyobuzin</owners>
         <licenseUrl>https://github.com/CoreTweet/CoreTweetSupplement/blob/master/LICENSE.txt</licenseUrl>
         <projectUrl>https://github.com/CoreTweet/CoreTweetSupplement</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>An utility for client developers with CoreTweet</description>
-        <copyright>(c) 2014 azyobuzin</copyright>
+        <copyright>(c) 2014-2015 CoreTweet Development Team</copyright>
         <tags>Twitter</tags>
         <dependencies>
-            <dependency id="CoreTweet" version="0.4.1" />
+            <dependency id="CoreTweet" version="0.5.3" />
         </dependencies>
     </metadata>
     <files>
