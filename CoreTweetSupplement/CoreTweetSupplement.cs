@@ -47,7 +47,7 @@ namespace CoreTweet
         /// <returns>A <see cref="Source"/> instance.</returns>
         public static Source ParseSource(string html)
         {
-            if (!html.StartsWith("<"))
+            if (!html.StartsWith("<", StringComparison.Ordinal))
                 return new Source()
                 {
                     Name = html

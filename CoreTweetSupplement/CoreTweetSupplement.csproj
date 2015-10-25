@@ -41,8 +41,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CoreTweet, Version=0.5.3.40351, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreTweet.0.5.3\lib\net40\CoreTweet.dll</HintPath>
+    <Reference Include="CoreTweet, Version=0.6.0.251, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoreTweet.0.6.0.251\lib\net40\CoreTweet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
