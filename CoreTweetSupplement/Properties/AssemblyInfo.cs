@@ -6,7 +6,7 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CoreTweet Development Team")]
 [assembly: AssemblyProduct("CoreTweetSupplement")]
-[assembly: AssemblyCopyright("Copyright (C) 2014-2015 CoreTweet Development Team")]
+[assembly: AssemblyCopyright("Copyright (C) 2014-2016 CoreTweet Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
