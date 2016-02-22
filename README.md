@@ -25,4 +25,9 @@ Source source = status.ParseSource();
 This is a method to split the text into Tweet Entities.
 Enumerates order sorted and HTML-decoded parts of the text.
 
-Example: [CoreTweetSupplementTest/CoreTweetSupplementTest.cs](https://github.com/azyobuzin/CoreTweetSupplement/blob/f695b971fb2415180b7091bbc0b78280bda5e7ff/CoreTweetSupplementTest/CoreTweetSupplementTest.cs#L53-L332)
+Example: [TestEnumerateTextParts](https://github.com/azyobuzin/CoreTweetSupplement/blob/f695b971fb2415180b7091bbc0b78280bda5e7ff/CoreTweetSupplementTest/CoreTweetSupplementTest.cs#L53-L332)
+
+## GetProfileImageUrl / GetProfileImageUrlHttps(this User, string) ##
+This is a method to get a URL pointing to the user's avatar image with given size.
+
+Example: [TestAlternativeProfileImageUri](https://github.com/CoreTweet/CoreTweetSupplement/blob/0d805a0b2df96fe7f57e26dfb9b45a65e9f3ea12/CoreTweetSupplementTest/CoreTweetSupplementTest.cs#L345-L372)
