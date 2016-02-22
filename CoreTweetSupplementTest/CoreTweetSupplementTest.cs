@@ -15,8 +15,8 @@ namespace CoreTweetSupplementTest
         [TestMethod]
         public void TestCharFromInt()
         {
-            TestTarget.InvokeStatic("CharFromInt", 97).Is("a");
-            TestTarget.InvokeStatic("CharFromInt", 0x20B9F).Is("𠮟");
+            TestTarget.InvokeStatic("CharFromInt", 97u).Is("a");
+            TestTarget.InvokeStatic("CharFromInt", (uint)0x20B9F).Is("𠮟");
         }
 
         [TestMethod]
@@ -43,12 +43,12 @@ namespace CoreTweetSupplementTest
                 });
         }
 
-        [TestMethod]
-        public void TestEnumerateChars()
-        {
-            ((IEnumerable<string>)TestTarget.InvokeStatic("EnumerateChars", "𠮷野家こそ至高!"))
-                .Is("𠮷", "野", "家", "こ", "そ", "至", "高", "!");
-        }
+        //[TestMethod]
+        //public void TestEnumerateChars()
+        //{
+        //    ((IEnumerable<string>)TestTarget.InvokeStatic("EnumerateChars", "𠮷野家こそ至高!"))
+        //        .Is("𠮷", "野", "家", "こ", "そ", "至", "高", "!");
+        //}
 
         [TestMethod]
         public void TestEnumerateTextParts()

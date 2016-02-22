@@ -46,8 +46,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CoreTweet, Version=0.6.0.251, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreTweet.0.6.0.251\lib\portable-net45+dnxcore50+win8+wpa81+MonoAndroid+xamarinios+MonoTouch\CoreTweet.dll</HintPath>
+    <Reference Include="CoreTweet, Version=0.6.1.267, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoreTweet.0.6.1.267\lib\portable-net45+dnxcore50+win8+wpa81+MonoAndroid+xamarinios+MonoTouch\CoreTweet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

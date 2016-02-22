@@ -12,7 +12,7 @@ namespace CoreTweet
     /// </summary>
     public static class CoreTweetSupplement
     {
-        private static string CharFromInt(int code)
+        private static string CharFromInt(uint code)
         {
             if (code <= char.MaxValue) return ((char)code).ToString();
 
@@ -26,18 +26,45 @@ namespace CoreTweet
 
         private static string HtmlDecode(string source)
         {
-            if (!source.Contains("&")) return source;
-            var result = Regex.Replace(source, "&#([0-9]+);", match => CharFromInt(int.Parse(match.Groups[1].Value)));
-            result = Regex.Replace(result, "&#x([0-9a-f]+);",
-                match => CharFromInt(int.Parse(match.Groups[1].Value, NumberStyles.HexNumber)),
-                RegexOptions.IgnoreCase
-            );
-            return result.Replace("&nbsp;", " ")
-                .Replace("&lt;", "<")
-                .Replace("&gt;", ">")
-                .Replace("&amp;", "&")
-                .Replace("&quot;", "\"")
-                .Replace("&apos;", "'");
+            if (source.IndexOf('&') == -1) return source;
+            var sb = new StringBuilder(source.Length);
+            for (var i = 0; i < source.Length; i++)
+            {
+                int semicolonIndex;
+                if (source[i] != '&'
+                    || (semicolonIndex = source.IndexOf(';', i + 3)) == -1)
+                {
+                    sb.Append(source[i]);
+                    continue;
+                }
+
+                var s = source.Substring(i + 1, semicolonIndex - i - 1);
+                switch (s)
+                {
+                    case "nbsp": sb.Append(' '); break;
+                    case "lt": sb.Append('<'); break;
+                    case "gt": sb.Append('>'); break;
+                    case "amp": sb.Append('&'); break;
+                    case "quot": sb.Append('"'); break;
+                    case "apos": sb.Append('\''); break;
+                    default:
+                        if (s[0] == '#')
+                        {
+                            var code = s[1] == 'x'
+                                ? uint.Parse(s.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture)
+                                : uint.Parse(s.Substring(1), CultureInfo.InvariantCulture);
+                            sb.Append(CharFromInt(code));
+                        }
+                        else
+                        {
+                            sb.Append('&').Append(s).Append(';');
+                        }
+                        break;
+                }
+
+                i = semicolonIndex;
+            }
+            return sb.ToString();
         }
 
         /// <summary>
@@ -76,43 +103,47 @@ namespace CoreTweet
             return ParseSource(status.Source);
         }
 
-        private static IEnumerable<string> EnumerateChars(string str)
+        private static List<DoubleUtf16Char> EnumerateChars(string str)
         {
+            var result = new List<DoubleUtf16Char>(str.Length);
             for (var i = 0; i < str.Length; i++)
             {
-                if (char.IsSurrogatePair(str, i))
-                {
-                    yield return new string(new[] { str[i], str[++i] });
-                }
-                else
-                {
-                    yield return str[i].ToString();
-                }
+                var c = str[i];
+                result.Add(char.IsHighSurrogate(c)
+                    ? new DoubleUtf16Char(c, str[++i])
+                    : new DoubleUtf16Char(c));
             }
+            return result;
         }
 
-        private static IEnumerable<T> Slice<T>(this T[] source, int start)
+        private static string ToString(IList<DoubleUtf16Char> source, int start)
         {
-            var len = source.Length;
-            for (var i = start; i < len; i++)
-                yield return source[i];
+            var sourceLen = source.Count;
+            var arr = new char[sourceLen * 2];
+            var strLen = 0;
+            for (var i = start; i < sourceLen; i++)
+            {
+                var x = source[i];
+                arr[strLen++] = x.X;
+                if (char.IsHighSurrogate(x.X))
+                    arr[strLen++] = x.Y;
+            }
+            return new string(arr, 0, strLen);
         }
 
-        private static IEnumerable<T> Slice<T>(this T[] source, int start, int count)
+        private static string ToString(IList<DoubleUtf16Char> source, int start, int count)
         {
+            var arr = new char[count * 2];
             var end = start + count;
+            var strLen = 0;
             for (var i = start; i < end; i++)
-                yield return source[i];
-        }
-
-        private class TextPart : ITextPart
-        {
-            public TextPartType Type { get; set; }
-            internal int Start { get; set; }
-            internal int End { get; set; }
-            public string RawText { get; set; }
-            public string Text { get; set; }
-            public Entity Entity { get; set; }
+            {
+                var x = source[i];
+                arr[strLen++] = x.X;
+                if (char.IsHighSurrogate(x.X))
+                    arr[strLen++] = x.Y;
+            }
+            return new string(arr, 0, strLen);
         }
 
         /// <summary>
@@ -121,7 +152,7 @@ namespace CoreTweet
         /// <param name="text">The text such as <see cref="Status.Text"/>, <see cref="DirectMessage.Text"/> and <see cref="User.Description"/>.</param>
         /// <param name="entities">The <see cref="Entities"/> instance.</param>
         /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
-        public static IEnumerable<ITextPart> EnumerateTextParts(string text, Entities entities)
+        public static IEnumerable<TextPart> EnumerateTextParts(string text, Entities entities)
         {
             if (entities == null)
             {
@@ -202,7 +233,7 @@ namespace CoreTweet
             }
 
             var current = list.First;
-            var chars = EnumerateChars(text).ToArray();
+            var chars = EnumerateChars(text);
 
             while (true)
             {
@@ -210,7 +241,7 @@ namespace CoreTweet
                 var count = current.Value.Start - start;
                 if (count > 0)
                 {
-                    var output = string.Concat(chars.Slice(start, count));
+                    var output = ToString(chars, start, count);
                     yield return new TextPart()
                     {
                         RawText = output,
@@ -225,9 +256,9 @@ namespace CoreTweet
             }
 
             var lastStart = current.Value.End;
-            if (lastStart < chars.Length)
+            if (lastStart < chars.Count)
             {
-                var lastOutput = string.Concat(chars.Slice(lastStart));
+                var lastOutput = ToString(chars, lastStart);
                 yield return new TextPart()
                 {
                     RawText = lastOutput,
@@ -241,7 +272,7 @@ namespace CoreTweet
         /// </summary>
         /// <param name="status">The <see cref="Status"/> instance.</param>
         /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="status"/>'s text.</returns>
-        public static IEnumerable<ITextPart> EnumerateTextParts(this Status status)
+        public static IEnumerable<TextPart> EnumerateTextParts(this Status status)
         {
             return EnumerateTextParts(status.Text, status.Entities);
         }
@@ -251,7 +282,7 @@ namespace CoreTweet
         /// </summary>
         /// <param name="dm">The <see cref="DirectMessage"/> instance.</param>
         /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="dm"/>'s text.</returns>
-        public static IEnumerable<ITextPart> EnumerateTextParts(this DirectMessage dm)
+        public static IEnumerable<TextPart> EnumerateTextParts(this DirectMessage dm)
         {
             return EnumerateTextParts(dm.Text, dm.Entities);
         }
@@ -331,37 +362,37 @@ namespace CoreTweet
     }
 
     /// <summary>
-    /// Types of <see cref="ITextPart"/>.
+    /// Types of <see cref="TextPart"/>.
     /// </summary>
     public enum TextPartType
     {
         /// <summary>
         /// Plain text, which is related to no entity.
-        /// <see cref="ITextPart.Entity"/> will be <c>null</c>.
+        /// <see cref="TextPart.Entity"/> will be <c>null</c>.
         /// </summary>
         Plain,
 
         /// <summary>
         /// Hashtag.
-        /// <see cref="ITextPart.Entity"/> will be a <see cref="HashtagEntity" /> instance.
+        /// <see cref="TextPart.Entity"/> will be a <see cref="HashtagEntity" /> instance.
         /// </summary>
         Hashtag,
 
         /// <summary>
         /// Cashtag.
-        /// <see cref="ITextPart.Entity"/> will be a <see cref="CashtagEntity" /> instance.
+        /// <see cref="TextPart.Entity"/> will be a <see cref="CashtagEntity" /> instance.
         /// </summary>
         Cashtag,
 
         /// <summary>
         /// URL.
-        /// <see cref="ITextPart.Entity"/> will be a <see cref="UrlEntity" /> instance.
+        /// <see cref="TextPart.Entity"/> will be a <see cref="UrlEntity" /> instance.
         /// </summary>
         Url,
 
         /// <summary>
         /// User mention.
-        /// <see cref="ITextPart.Entity"/> will be a <see cref="UserMentionEntity" /> instance.
+        /// <see cref="TextPart.Entity"/> will be a <see cref="UserMentionEntity" /> instance.
         /// </summary>
         UserMention
     }
@@ -369,26 +400,47 @@ namespace CoreTweet
     /// <summary>
     /// A part of text.
     /// </summary>
-    public interface ITextPart
+    public class TextPart
     {
         /// <summary>
         /// The type of this instance.
         /// </summary>
-        TextPartType Type { get; }
+        public TextPartType Type { get; set; }
+
+        internal int Start { get; set; }
+        internal int End { get; set; }
 
         /// <summary>
         /// The raw text.
         /// </summary>
-        string RawText { get; }
+        public string RawText { get; set; }
 
         /// <summary>
         /// The decoded text.
         /// </summary>
-        string Text { get; }
+        public string Text { get; set; }
 
         /// <summary>
         /// The base entity information.
         /// </summary>
-        Entity Entity { get; }
+        public Entity Entity { get; set; }
+    }
+
+    internal struct DoubleUtf16Char
+    {
+        public char X;
+        public char Y;
+
+        public DoubleUtf16Char(char x)
+        {
+            this.X = x;
+            this.Y = default(char);
+        }
+
+        public DoubleUtf16Char(char x, char y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
     }
 }

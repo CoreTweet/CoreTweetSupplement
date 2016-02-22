@@ -41,8 +41,8 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreTweet, Version=0.6.0.251, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreTweet.0.6.0.251\lib\net45\CoreTweet.dll</HintPath>
+    <Reference Include="CoreTweet, Version=0.6.1.267, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoreTweet.0.6.1.267\lib\net45\CoreTweet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
