@@ -27,6 +27,9 @@ Enumerates order sorted and HTML-decoded parts of the text.
 
 Example: [TestEnumerateTextParts](https://github.com/azyobuzin/CoreTweetSupplement/blob/f695b971fb2415180b7091bbc0b78280bda5e7ff/CoreTweetSupplementTest/CoreTweetSupplementTest.cs#L53-L332)
 
+## GetExtendedTweetElements(this Status) ##
+A variation of EnumerateTextParts which supports the new structure of Tweets.
+
 ## GetProfileImageUrl / GetProfileImageUrlHttps(this User, string) ##
 This is a method to get a URL pointing to the user's avatar image with given size.
 

@@ -103,7 +103,7 @@ namespace CoreTweet
             return ParseSource(status.Source);
         }
 
-        private static List<DoubleUtf16Char> EnumerateChars(string str)
+        private static List<DoubleUtf16Char> GetCodePoints(string str)
         {
             var result = new List<DoubleUtf16Char>(str.Length);
             for (var i = 0; i < str.Length; i++)
@@ -114,21 +114,6 @@ namespace CoreTweet
                     : new DoubleUtf16Char(c));
             }
             return result;
-        }
-
-        private static string ToString(IList<DoubleUtf16Char> source, int start)
-        {
-            var sourceLen = source.Count;
-            var arr = new char[sourceLen * 2];
-            var strLen = 0;
-            for (var i = start; i < sourceLen; i++)
-            {
-                var x = source[i];
-                arr[strLen++] = x.X;
-                if (char.IsHighSurrogate(x.X))
-                    arr[strLen++] = x.Y;
-            }
-            return new string(arr, 0, strLen);
         }
 
         private static string ToString(IList<DoubleUtf16Char> source, int start, int count)
@@ -154,8 +139,34 @@ namespace CoreTweet
         /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
         public static IEnumerable<TextPart> EnumerateTextParts(string text, Entities entities)
         {
+            var chars = GetCodePoints(text);
+            return EnumerateTextParts(chars, entities, 0, chars.Count);
+        }
+
+        /// <summary>
+        /// Enumerates parts split into Tweet Entities.
+        /// </summary>
+        /// <param name="text">The text such as <see cref="Status.Text"/>, <see cref="DirectMessage.Text"/> and <see cref="User.Description"/>.</param>
+        /// <param name="entities">The <see cref="Entities"/> instance.</param>
+        /// <param name="startIndex">The starting character position in code point.</param>
+        /// <param name="endIndex">The ending character position in code point.</param>
+        /// <returns>An <see cref="IEnumerable{ITextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
+        public static IEnumerable<TextPart> EnumerateTextParts(string text, Entities entities, int startIndex, int endIndex)
+        {
+            return EnumerateTextParts(GetCodePoints(text), entities, startIndex, endIndex);
+        }
+
+        private static IEnumerable<TextPart> EnumerateTextParts(IList<DoubleUtf16Char> chars, Entities entities, int startIndex, int endIndex)
+        {
+            if (startIndex < 0 || startIndex >= chars.Count)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+
+            if (endIndex < startIndex || endIndex > chars.Count)
+                throw new ArgumentOutOfRangeException(nameof(endIndex));
+
             if (entities == null)
             {
+                var text = ToString(chars, startIndex, endIndex - startIndex);
                 yield return new TextPart()
                 {
                     RawText = text,
@@ -202,7 +213,7 @@ namespace CoreTweet
                                 Type = TextPartType.Url,
                                 Start = e.Indices[0],
                                 End = e.Indices[1],
-                                RawText = e.Url.ToString(),
+                                RawText = e.Url,
                                 Text = e.DisplayUrl,
                                 Entity = e
                             })
@@ -219,11 +230,13 @@ namespace CoreTweet
                                 Entity = e
                             })
                     )
+                    .Where(e => e.Start >= startIndex && e.Start < endIndex)
                     .OrderBy(part => part.Start)
             );
 
             if (list.Count == 0)
             {
+                var text = ToString(chars, startIndex, endIndex - startIndex);
                 yield return new TextPart()
                 {
                     RawText = text,
@@ -233,11 +246,10 @@ namespace CoreTweet
             }
 
             var current = list.First;
-            var chars = EnumerateChars(text);
 
             while (true)
             {
-                var start = current.Previous?.Value.End ?? 0;
+                var start = current.Previous?.Value.End ?? startIndex;
                 var count = current.Value.Start - start;
                 if (count > 0)
                 {
@@ -256,9 +268,9 @@ namespace CoreTweet
             }
 
             var lastStart = current.Value.End;
-            if (lastStart < chars.Count)
+            if (lastStart < endIndex)
             {
-                var lastOutput = ToString(chars, lastStart);
+                var lastOutput = ToString(chars, lastStart, endIndex - lastStart);
                 yield return new TextPart()
                 {
                     RawText = lastOutput,
@@ -285,6 +297,38 @@ namespace CoreTweet
         public static IEnumerable<TextPart> EnumerateTextParts(this DirectMessage dm)
         {
             return EnumerateTextParts(dm.Text, dm.Entities);
+        }
+
+        /// <summary>
+        /// Enumerates parts split into Tweet Entities.
+        /// </summary>
+        /// <param name="status">The <see cref="Status"/> instance.</param>
+        /// <returns>An <see cref="ExtendedTweetInfo"/> instance.</returns>
+        public static ExtendedTweetInfo GetExtendedTweetElements(this Status status)
+        {
+            var displayTextRange = status.DisplayTextRange ?? status.ExtendedTweet?.DisplayTextRange;
+            if (displayTextRange == null)
+                return new ExtendedTweetInfo
+                {
+                    TweetText = status.EnumerateTextParts().ToArray(),
+                    HiddenPrefix = new UserMentionEntity[0],
+                    HiddenSuffix = new UrlEntity[0]
+                };
+
+            var start = displayTextRange[0];
+            var end = displayTextRange[1];
+            return new ExtendedTweetInfo
+            {
+                TweetText = EnumerateTextParts(
+                    status.FullText ?? status.ExtendedTweet?.FullText ?? status.Text,
+                    status.Entities,
+                    start, end).ToArray(),
+                HiddenPrefix = status.Entities?.UserMentions == null ? new UserMentionEntity[0]
+                    : status.Entities.UserMentions.Where(x => x.Indices[0] < start).ToArray(),
+                HiddenSuffix = (status.Entities?.Urls ?? Enumerable.Empty<UrlEntity>())
+                    .Concat(status.Entities?.Media ?? Enumerable.Empty<UrlEntity>())
+                    .Where(x => x.Indices[0] >= end).ToArray()
+            };
         }
 
         /// <summary>
@@ -442,5 +486,26 @@ namespace CoreTweet
             this.X = x;
             this.Y = y;
         }
+    }
+
+    /// <summary>
+    /// Represents a Tweet rendered in Extended mode.
+    /// </summary>
+    public class ExtendedTweetInfo
+    {
+        /// <summary>
+        /// The elements of Tweet Text part.
+        /// </summary>
+        public TextPart[] TweetText { get; set; }
+
+        /// <summary>
+        /// Replies.
+        /// </summary>
+        public UserMentionEntity[] HiddenPrefix { get; set; }
+
+        /// <summary>
+        /// Attachment URLs.
+        /// </summary>
+        public UrlEntity[] HiddenSuffix { get; set; }
     }
 }
