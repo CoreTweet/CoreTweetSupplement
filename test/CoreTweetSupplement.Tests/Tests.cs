@@ -1,64 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CoreTweet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Xunit;
 
 namespace CoreTweetSupplementTest
 {
-    [TestClass]
-    public class CoreTweetSupplementTest
+    public class Tests
     {
-        private static readonly PrivateType TestTarget = new PrivateType(typeof(CoreTweetSupplement));
+        private static object InvokeStatic<T>(string methodName, params object[] parameters)
+        {
+            return (T)typeof(CoreTweetSupplement).GetTypeInfo().GetDeclaredMethod(methodName).Invoke(null, parameters);
+        }
 
-        [TestMethod]
+        [Fact]
         public void TestCharFromInt()
         {
-            TestTarget.InvokeStatic("CharFromInt", 97u).Is("a");
-            TestTarget.InvokeStatic("CharFromInt", (uint)0x20B9F).Is("𠮟");
+            Assert.Equal("a", InvokeStatic<string>("CharFromInt", 97u));
+            Assert.Equal("𠮟", InvokeStatic<string>("CharFromInt", (uint)0x20B9F));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestHtmlDecode()
         {
-            TestTarget.InvokeStatic("HtmlDecode", "test&lt;&gt;a&amp;&quot;&apos;&#9834;&#x266A;0")
-                .Is("test<>a&\"'♪♪0");
+            Assert.Equal("test<>a&\"'♪♪0", InvokeStatic<string>("HtmlDecode", "test&lt;&gt;a&amp;&quot;&apos;&#9834;&#x266A;0"));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestParseSource()
         {
-            CoreTweetSupplement.ParseSource(@"<a href=""http://twitter.com/download/iphone"" rel=""nofollow"">Twitter for iPhone</a>")
-                .IsStructuralEqual(new Source()
-                {
-                    Name = "Twitter for iPhone",
-                    Href = "http://twitter.com/download/iphone"
-                });
-            CoreTweetSupplement.ParseSource("web")
-                .IsStructuralEqual(new Source()
-                {
-                    Name = "web",
-                    Href = null
-                });
+            var source1 = CoreTweetSupplement.ParseSource(@"<a href=""http://twitter.com/download/iphone"" rel=""nofollow"">Twitter for iPhone</a>");
+            Assert.Equal("Twitter for iPhone", source1.Name);
+            Assert.Equal("http://twitter.com/download/iphone", source1.Href);
+
+            var source2 = CoreTweetSupplement.ParseSource("web");
+            Assert.Equal("web", source2.Name);
+            Assert.Null(source2.Href);
         }
 
-        //[TestMethod]
-        //public void TestEnumerateChars()
-        //{
-        //    ((IEnumerable<string>)TestTarget.InvokeStatic("EnumerateChars", "𠮷野家こそ至高!"))
-        //        .Is("𠮷", "野", "家", "こ", "そ", "至", "高", "!");
-        //}
-
-        [TestMethod]
+        [Fact]
         public void TestEnumerateTextParts()
         {
             var array = CoreTweetSupplement.EnumerateTextParts("test", null).ToArray();
-            array.Length.Is(1);
-            array[0].Type.Is(TextPartType.Plain);
-            array[0].RawText.Is("test");
-            array[0].Text.Is("test");
-            array[0].Entity.IsNull();
+            Assert.Equal(1, array.Length);
+            Assert.Equal(TextPartType.Plain, array[0].Type);
+            Assert.Equal("test", array[0].RawText);
+            Assert.Equal("test", array[0].Text);
+            Assert.Null(array[0].Entity);
 
             #region Case 1
             const string case1 = @"{
@@ -200,23 +189,23 @@ namespace CoreTweetSupplementTest
             #endregion
 
             array = JsonConvert.DeserializeObject<Status>(case1).EnumerateTextParts().ToArray();
-            array.Length.Is(4);
-            array[0].Type.Is(TextPartType.Plain);
-            array[0].RawText.Is("てすとtest𠮷野家 #𠮷野家 aa ");
-            array[0].Text.Is("てすとtest𠮷野家 #𠮷野家 aa ");
-            array[0].Entity.IsNull();
-            array[1].Type.Is(TextPartType.UserMention);
-            array[1].RawText.Is("@azyobuzin_test");
-            array[1].Text.Is("@azyobuzin_test");
-            array[1].Entity.IsNotNull();
-            array[2].Type.Is(TextPartType.Plain);
-            array[2].RawText.Is(" ");
-            array[2].Text.Is(" ");
-            array[2].Entity.IsNull();
-            array[3].Type.Is(TextPartType.Url);
-            array[3].RawText.Is("http://t.co/KmtlVpXaUN");
-            array[3].Text.Is("pic.twitter.com/KmtlVpXaUN");
-            array[3].Entity.IsNotNull();
+            Assert.Equal(4, array.Length);
+            Assert.Equal(TextPartType.Plain, array[0].Type);
+            Assert.Equal("てすとtest𠮷野家 #𠮷野家 aa ", array[0].RawText);
+            Assert.Equal("てすとtest𠮷野家 #𠮷野家 aa ", array[0].Text);
+            Assert.Null(array[0].Entity);
+            Assert.Equal(TextPartType.UserMention, array[1].Type);
+            Assert.Equal("@azyobuzin_test", array[1].RawText);
+            Assert.Equal("@azyobuzin_test", array[1].Text);
+            Assert.NotNull(array[1].Entity);
+            Assert.Equal(TextPartType.Plain, array[2].Type);
+            Assert.Equal(" ", array[2].RawText);
+            Assert.Equal(" ", array[2].Text);
+            Assert.Null(array[2].Entity);
+            Assert.Equal(TextPartType.Url, array[3].Type);
+            Assert.Equal("http://t.co/KmtlVpXaUN", array[3].RawText);
+            Assert.Equal("pic.twitter.com/KmtlVpXaUN", array[3].Text);
+            Assert.NotNull(array[3].Entity);
 
             #region Case 2
             const string case2 = @"{
@@ -316,59 +305,70 @@ namespace CoreTweetSupplementTest
             #endregion
 
             array = JsonConvert.DeserializeObject<Status>(case2).EnumerateTextParts().ToArray();
-            array.Length.Is(3);
-            array[0].Type.Is(TextPartType.Plain);
-            array[0].RawText.Is("ってって ");
-            array[0].Text.Is("ってって ");
-            array[0].Entity.IsNull();
-            array[1].Type.Is(TextPartType.Hashtag);
-            array[1].RawText.Is("#test");
-            array[1].Text.Is("#test");
-            array[1].Entity.IsNotNull();
-            array[2].Type.Is(TextPartType.Plain);
-            array[2].RawText.Is(" &amp;&lt;てすと&gt;&amp;&amp;amp;");
-            array[2].Text.Is(" &<てすと>&&amp;");
-            array[2].Entity.IsNull();
+            Assert.Equal(3, array.Length);
+            Assert.Equal(TextPartType.Plain, array[0].Type);
+            Assert.Equal("ってって ", array[0].RawText);
+            Assert.Equal("ってって ", array[0].Text);
+            Assert.Null(array[0].Entity);
+            Assert.Equal(TextPartType.Hashtag, array[1].Type);
+            Assert.Equal("#test", array[1].RawText);
+            Assert.Equal("#test", array[1].Text);
+            Assert.NotNull(array[1].Entity);
+            Assert.Equal(TextPartType.Plain, array[2].Type);
+            Assert.Equal(" &amp;&lt;てすと&gt;&amp;&amp;amp;", array[2].RawText);
+            Assert.Equal(" &<てすと>&&amp;", array[2].Text);
+            Assert.Null(array[2].Entity);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestAlternativeProfileImageUriSuffix()
         {
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", new[] { typeof(string) }, new object[] { null }).Is("");
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "").Is("");
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "orig").Is("");
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "mini").Is("_mini");
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "normal").Is("_normal");
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUriSuffix", "bigger").Is("_bigger");
+            Assert.Equal("", InvokeStatic<string>("GetAlternativeProfileImageUriSuffix", new object[] { null }));
+            Assert.Equal("", InvokeStatic<string>("GetAlternativeProfileImageUriSuffix", ""));
+            Assert.Equal("", InvokeStatic<string>("GetAlternativeProfileImageUriSuffix", "orig"));
+            Assert.Equal("_mini", InvokeStatic<string>("GetAlternativeProfileImageUriSuffix", "mini"));
+            Assert.Equal("_normal", InvokeStatic<string>("GetAlternativeProfileImageUriSuffix", "normal"));
+            Assert.Equal("_bigger", InvokeStatic<string>("GetAlternativeProfileImageUriSuffix", "bigger"));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestAlternativeProfileImageUri()
         {
             // Basic tests
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                "http://example.com/path1/path2/test_normal.png", "orig")
-                .Is(new Uri("http://example.com/path1/path2/test.png"));
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                "http://example.com/path1/path2/test_normal.gif", "normal")
-                .Is(new Uri("http://example.com/path1/path2/test_normal.gif"));
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                "http://example.com/path1/path2/test_normal.jpg", "mini")
-                .Is(new Uri("http://example.com/path1/path2/test_mini.jpg"));
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                "http://example.com/path1/path2/test_normal", "bigger")
-                .Is(new Uri("http://example.com/path1/path2/test_bigger"));
+            Assert.Equal(
+                new Uri("http://example.com/path1/path2/test.png"),
+                InvokeStatic<Uri>("GetAlternativeProfileImageUri", "http://example.com/path1/path2/test_normal.png", "orig")
+            );
+            Assert.Equal(
+                new Uri("http://example.com/path1/path2/test_normal.gif"),
+                InvokeStatic<Uri>("GetAlternativeProfileImageUri", "http://example.com/path1/path2/test_normal.gif", "normal")
+            );
+            Assert.Equal(
+                new Uri("http://example.com/path1/path2/test_mini.jpg"),
+                InvokeStatic<Uri>("GetAlternativeProfileImageUri", "http://example.com/path1/path2/test_normal.jpg", "mini")
+            );
+            Assert.Equal(
+                new Uri("http://example.com/path1/path2/test_bigger"),
+                InvokeStatic<Uri>("GetAlternativeProfileImageUri", "http://example.com/path1/path2/test_normal", "bigger")
+            );
             // URL escape tests
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                "http://example.com/%E3%83%86%E3%82%B9%E3%83%88_normal.png", "orig")
-                .Is(new Uri("http://example.com/%E3%83%86%E3%82%B9%E3%83%88.png"));
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                "http://example.com/%83%65%83%58%83%67_normal.jpeg", "mini")
-                .Is(new Uri("http://example.com/%83%65%83%58%83%67_mini.jpeg"));
+            Assert.Equal(
+                new Uri("http://example.com/%E3%83%86%E3%82%B9%E3%83%88.png"),
+                InvokeStatic<Uri>("GetAlternativeProfileImageUri", "http://example.com/%E3%83%86%E3%82%B9%E3%83%88_normal.png", "orig")
+            );
+            Assert.Equal(
+                new Uri("http://example.com/%83%65%83%58%83%67_mini.jpeg"),
+                InvokeStatic<Uri>("GetAlternativeProfileImageUri", "http://example.com/%83%65%83%58%83%67_normal.jpeg", "mini")
+            );
             // Complex paths
-            TestTarget.InvokeStatic("GetAlternativeProfileImageUri",
-                "http://example.com//path1//path2/test_normal.gif?test1=test2&test3=%83%65%83%58%83%674&test5=%E3%83%86%E3%82%B9%E3%83%886#example-section", "bigger")
-                .Is(new Uri("http://example.com//path1//path2/test_bigger.gif?test1=test2&test3=%83%65%83%58%83%674&test5=%E3%83%86%E3%82%B9%E3%83%886#example-section"));
+            Assert.Equal(
+                new Uri("http://example.com//path1//path2/test_bigger.gif?test1=test2&test3=%83%65%83%58%83%674&test5=%E3%83%86%E3%82%B9%E3%83%886#example-section"),
+                InvokeStatic<Uri>(
+                    "GetAlternativeProfileImageUri",
+                    "http://example.com//path1//path2/test_normal.gif?test1=test2&test3=%83%65%83%58%83%674&test5=%E3%83%86%E3%82%B9%E3%83%886#example-section",
+                    "bigger"
+                )
+            );
         }
     }
 }

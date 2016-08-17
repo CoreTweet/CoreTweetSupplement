@@ -1,20 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplement", "CoreTweetSupplement\CoreTweetSupplement.csproj", "{E16A132A-343B-4349-B925-EB84EA6B4109}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9EF31A5B-6D8D-4DA0-85A0-71B5F9D0CE26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplement.Pcl", "CoreTweetSupplement.Pcl\CoreTweetSupplement.Pcl.csproj", "{8DECAE07-93E7-411C-BC78-567547FCB8BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTweetSupplementTest", "CoreTweetSupplementTest\CoreTweetSupplementTest.csproj", "{FDC352B1-A93E-4DDB-895B-342DB718B869}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{67A9B024-FBDD-4A42-B32D-6F0D39F262F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E691DD45-AC28-4E5F-8956-CADC84898AE7}"
 	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
+		global.json = global.json
 	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreTweetSupplement", "src\CoreTweetSupplement\CoreTweetSupplement.xproj", "{FADC8E00-848D-4BA9-A51B-3D53CD3087A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9EB94BC3-6918-456E-BB12-78FA6288E2B3}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreTweetSupplement.Tests", "test\CoreTweetSupplement.Tests\CoreTweetSupplement.Tests.xproj", "{3D9923A2-7241-4C28-AC7E-222BB1CB1C1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,20 +22,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E16A132A-343B-4349-B925-EB84EA6B4109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E16A132A-343B-4349-B925-EB84EA6B4109}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E16A132A-343B-4349-B925-EB84EA6B4109}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E16A132A-343B-4349-B925-EB84EA6B4109}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DECAE07-93E7-411C-BC78-567547FCB8BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDC352B1-A93E-4DDB-895B-342DB718B869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADC8E00-848D-4BA9-A51B-3D53CD3087A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADC8E00-848D-4BA9-A51B-3D53CD3087A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADC8E00-848D-4BA9-A51B-3D53CD3087A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADC8E00-848D-4BA9-A51B-3D53CD3087A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D9923A2-7241-4C28-AC7E-222BB1CB1C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D9923A2-7241-4C28-AC7E-222BB1CB1C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D9923A2-7241-4C28-AC7E-222BB1CB1C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D9923A2-7241-4C28-AC7E-222BB1CB1C1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FADC8E00-848D-4BA9-A51B-3D53CD3087A5} = {9EF31A5B-6D8D-4DA0-85A0-71B5F9D0CE26}
+		{3D9923A2-7241-4C28-AC7E-222BB1CB1C1F} = {9EB94BC3-6918-456E-BB12-78FA6288E2B3}
 	EndGlobalSection
 EndGlobal

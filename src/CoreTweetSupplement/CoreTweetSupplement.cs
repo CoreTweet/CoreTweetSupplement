@@ -51,8 +51,8 @@ namespace CoreTweet
                         if (s[0] == '#')
                         {
                             var code = s[1] == 'x'
-                                ? uint.Parse(s.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture)
-                                : uint.Parse(s.Substring(1), CultureInfo.InvariantCulture);
+                                ? uint.Parse(s.Substring(2), NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo)
+                                : uint.Parse(s.Substring(1), NumberFormatInfo.InvariantInfo);
                             sb.Append(CharFromInt(code));
                         }
                         else
