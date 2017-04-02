@@ -28,13 +28,6 @@
     <PackageReference Include="CoreTweet" Version="0.7.2.352" />
   </ItemGroup>
 
-  <!--
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  -->
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
