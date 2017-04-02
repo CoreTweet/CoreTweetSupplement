@@ -2,7 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <RootNamespace>CoreTweetSupplementTest</RootNamespace>
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="testdata\**\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\CoreTweetSupplement\CoreTweetSupplement.csproj" />
@@ -15,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Added by Test Explorer -->
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 

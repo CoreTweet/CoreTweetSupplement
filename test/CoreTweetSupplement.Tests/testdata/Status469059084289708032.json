@@ -1,0 +1,89 @@
+﻿{
+  "created_at": "Wed May 21 10:16:15 +0000 2014",
+  "id": 469059084289708032,
+  "id_str": "469059084289708032",
+  "text": "ってって #test &amp;&lt;てすと&gt;&amp;&amp;amp;",
+  "truncated": false,
+  "entities": {
+    "hashtags": [
+      {
+        "text": "test",
+        "indices": [ 5, 10 ]
+      }
+    ],
+    "symbols": [],
+    "user_mentions": [],
+    "urls": []
+  },
+  "source": "<a href=\"http://azyobuzi.net/\" rel=\"nofollow\">ひゅいっ</a>",
+  "in_reply_to_status_id": null,
+  "in_reply_to_status_id_str": null,
+  "in_reply_to_user_id": null,
+  "in_reply_to_user_id_str": null,
+  "in_reply_to_screen_name": null,
+  "user": {
+    "id": 265093120,
+    "id_str": "265093120",
+    "name": "ぺぺたろう（テストなーーう）",
+    "screen_name": "azyobuzin_test",
+    "location": "@azyobuzinの脳の一部",
+    "description": "@azyobuzinのテスト用アカウント",
+    "url": "https://t.co/Fmkl9K35Fu",
+    "entities": {
+      "url": {
+        "urls": [
+          {
+            "url": "https://t.co/Fmkl9K35Fu",
+            "expanded_url": "https://twitter.com/azyobuzin",
+            "display_url": "twitter.com/azyobuzin",
+            "indices": [ 0, 23 ]
+          }
+        ]
+      },
+      "description": { "urls": [] }
+    },
+    "protected": false,
+    "followers_count": 4,
+    "friends_count": 1,
+    "listed_count": 1,
+    "created_at": "Sun Mar 13 00:52:42 +0000 2011",
+    "favourites_count": 16,
+    "utc_offset": 32400,
+    "time_zone": "Tokyo",
+    "geo_enabled": true,
+    "verified": false,
+    "statuses_count": 106,
+    "lang": "ja",
+    "contributors_enabled": false,
+    "is_translator": false,
+    "is_translation_enabled": false,
+    "profile_background_color": "C0DEED",
+    "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+    "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+    "profile_background_tile": false,
+    "profile_image_url": "http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png",
+    "profile_image_url_https": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png",
+    "profile_link_color": "1DA1F2",
+    "profile_sidebar_border_color": "C0DEED",
+    "profile_sidebar_fill_color": "DDEEF6",
+    "profile_text_color": "333333",
+    "profile_use_background_image": true,
+    "has_extended_profile": false,
+    "default_profile": true,
+    "default_profile_image": true,
+    "following": true,
+    "follow_request_sent": false,
+    "notifications": false,
+    "translator_type": "none"
+  },
+  "geo": null,
+  "coordinates": null,
+  "place": null,
+  "contributors": null,
+  "is_quote_status": false,
+  "retweet_count": 0,
+  "favorite_count": 0,
+  "favorited": false,
+  "retweeted": false,
+  "lang": "ja"
+}

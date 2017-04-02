@@ -139,6 +139,9 @@ namespace CoreTweet
         /// <returns>An <see cref="IEnumerable{TextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
         public static IEnumerable<TextPart> EnumerateTextParts(string text, Entities entities)
         {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
             var chars = GetCodePoints(text);
             return EnumerateTextParts(chars, entities, 0, chars.Count);
         }
@@ -153,6 +156,9 @@ namespace CoreTweet
         /// <returns>An <see cref="IEnumerable{TextPart}"/> whose elements are parts of <paramref name="text"/>.</returns>
         public static IEnumerable<TextPart> EnumerateTextParts(string text, Entities entities, int startIndex, int endIndex)
         {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
             var chars = GetCodePoints(text);
 
             if (startIndex < 0 || startIndex >= chars.Count)
@@ -166,6 +172,8 @@ namespace CoreTweet
 
         private static IEnumerable<TextPart> EnumerateTextParts(IList<DoubleUtf16Char> chars, Entities entities, int startIndex, int endIndex)
         {
+            if (startIndex == endIndex) yield break;
+
             if (entities == null)
             {
                 var text = ToString(chars, startIndex, endIndex - startIndex);
@@ -185,7 +193,7 @@ namespace CoreTweet
             }
 
             var list = new LinkedList<TextPart>(
-                (entities.HashTags ?? Enumerable.Empty<SymbolEntity>())
+                (entities.HashTags ?? Enumerable.Empty<HashtagEntity>())
                     .Select(e => new TextPart()
                     {
                         Type = TextPartType.Hashtag,
@@ -196,7 +204,7 @@ namespace CoreTweet
                         Entity = e
                     })
                     .Concat(
-                        (entities.Symbols ?? Enumerable.Empty<SymbolEntity>())
+                        (entities.Symbols ?? Enumerable.Empty<CashtagEntity>())
                             .Select(e => new TextPart()
                             {
                                 Type = TextPartType.Cashtag,
