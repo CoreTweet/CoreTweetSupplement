@@ -1,13 +1,13 @@
-version: 1.6.2.{build}
+version: 1.6.3.{build}
 
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 build_script:
 - ps: dotnet restore
-- ps: dotnet pack -c Release --version-suffix "ci$(Get-Date -Format yyyyMMddHHmm)" src\CoreTweetSupplement
+- ps: dotnet pack src\CoreTweetSupplement\CoreTweetSupplement.csproj -c Release
 
 test_script:
-- ps: dotnet test test\CoreTweetSupplement.Tests
+- ps: dotnet test test\CoreTweetSupplement.Tests\CoreTweetSupplement.Tests.csproj
 
 artifacts:
 - path: src\CoreTweetSupplement\bin\Release\*.nupkg

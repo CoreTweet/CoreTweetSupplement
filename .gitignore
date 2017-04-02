@@ -254,3 +254,6 @@ paket-files/
 
 # CodeRush
 .cr/
+
+# Visual Studio Code
+.vscode/
